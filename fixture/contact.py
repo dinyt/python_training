@@ -3,7 +3,7 @@ class ContactHelper():
     def __init__(self, app):
         self.app = app
 
-    def create_contact(self, contact):
+    def create(self, contact):
         wd = self.app.wd
         # click add contact
         wd.find_element_by_link_text("add new").click()
@@ -105,3 +105,8 @@ class ContactHelper():
         # accept deletion
         wd.switch_to_alert().accept()
         self.return_to_home_page()
+
+    def count(self):
+        wd = self.app.wd
+        self.return_to_home_page()
+        return len(wd.find_elements_by_name("selected[]"))
