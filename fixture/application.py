@@ -8,7 +8,7 @@ class Application:
     def __init__(self):
         self.wd = WebDriver()
         # implicitly_wait - ожидание тех или иных элементов в браузере
-        self.wd.implicitly_wait(5)
+        # self.wd.implicitly_wait(3)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
