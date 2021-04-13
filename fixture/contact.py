@@ -1,3 +1,5 @@
+from model.contact import Contact
+
 class ContactHelper():
 
     def __init__(self, app):
@@ -105,9 +107,21 @@ class ContactHelper():
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # accept deletion
         wd.switch_to_alert().accept()
+        wd.implicitly_wait(3)
         self.return_to_home_page()
 
     def count(self):
         wd = self.app.wd
         self.return_to_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.return_to_home_page()
+        contacts = []
+        for element in wd.find_elements_by_name("entry"):
+            firstName = element.find_element_by_xpath(".//td[2]").text
+            lastName = element.find_element_by_xpath(".//td[3]").text
+            id = element.find_element_by_name("selected[]").get_attribute("id")
+            contacts.append(Contact(fName = firstName, lName = lastName, id = id))
+        return contacts
