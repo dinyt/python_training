@@ -55,7 +55,7 @@ testdata = [Contact(fName = "", mName = "", lName = "", nick = "", title = "", c
             email3 = random_string("email3", 20),
             homePage = random_string("homePage", 20),
             phone2 = random_digits("phone2", 10),
-            notes = random_any_symbols("notes", 30),
+            notes = random_string("notes", 30),
             address2 = random_string("address2", 10),
             homephone = random_digits("homephone", 10),
             mobilephone = random_digits("mobilephone", 10),
