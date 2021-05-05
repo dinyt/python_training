@@ -1,5 +1,7 @@
 import re
 from random import randrange
+from fixture.db import DbFixture
+from model.contact import Contact
 
 def test_phones_on_home_page(app):
     contact_from_home_page = app.contact.get_contact_list()[0]
@@ -24,6 +26,21 @@ def test_compare_info_between_main_and_edit_pages(app):
     assert contact_from_home_page.fName == contact_from_edit_page.fName
     assert contact_from_home_page.lName == contact_from_edit_page.lName
     assert contact_from_home_page.address == contact_from_edit_page.address
+
+def test_compare_info_all_contacts_on_main_page_and_info_from_db(app, db):
+    all_contacts_from_main_page = sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
+    all_contacts_from_db = sorted(db.get_contact_list(), key=Contact.id_or_max)
+    i = 0
+    for item in all_contacts_from_main_page:
+        assert all_contacts_from_main_page[i].id == all_contacts_from_db[i].id
+        assert all_contacts_from_main_page[i].fName == all_contacts_from_db[i].fName
+        assert all_contacts_from_main_page[i].lName == all_contacts_from_db[i].lName
+        assert all_contacts_from_main_page[i].address == all_contacts_from_db[i].address
+        assert all_contacts_from_main_page[i].all_phones_from_home_page == merge_phones_like_on_home_page(
+            all_contacts_from_db[i])
+        assert all_contacts_from_main_page[i].all_emails_from_home_page == merge_emails_like_on_home_page(
+            all_contacts_from_db[i])
+        i = i + 1
 
 def clear(s):
     return re.sub("[() -]", "", s)
