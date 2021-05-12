@@ -56,7 +56,7 @@ class ORMFixture:
         # указанных в них таблиц
         self.db.generate_mapping()
         # в консоли будут отображаться SQL-запросы
-        sql_debug(True)
+        sql_debug(False)
 
     def convert_groups_to_model(self, groups):
         def convert(group):
@@ -91,3 +91,32 @@ class ORMFixture:
         orm_group = list(select(g for g in ORMFixture.ORMGroup if g.id == group.id))[0]
         return self.convert_contacts_to_model(
             select(c for c in ORMFixture.ORMContact if c.deprecated is None and orm_group not in c.groups))
+
+    @db_session
+    def contact_in_group(self, contact, group):
+        orm_group = list(select(g for g in ORMFixture.ORMGroup if g.id == group.id))[0]
+        contacts = self.convert_contacts_to_model(
+            select(c for c in ORMFixture.ORMContact if c.deprecated is None and orm_group in c.groups))
+        result = False
+        for item in contacts:
+            if item.id == contact.id:
+                result = True
+                break
+        return result
+
+    @db_session
+    def get_groups_for_contact(self, contact):
+        orm_contact = list(select(c for c in ORMFixture.ORMContact if c.id == contact.id))[0]
+        return self.convert_groups_to_model(orm_contact.groups)
+
+    @db_session
+    def get_count_groups_for_contact(self, contact):
+        orm_contact = list(select(c for c in ORMFixture.ORMContact if c.id == contact.id))[0]
+        return len(orm_contact.groups)
+
+    @db_session
+    def get_count_contacts_in_group(self, group):
+        orm_group = list(select(g for g in ORMFixture.ORMGroup if g.id == group.id))[0]
+        contacts = self.convert_contacts_to_model(
+            select(c for c in ORMFixture.ORMContact if c.deprecated is None and orm_group in c.groups))
+        return len(contacts)

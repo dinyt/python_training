@@ -1,4 +1,6 @@
 from model.contact import Contact
+from selenium.webdriver.support.ui import Select
+from fixture.orm import ORMFixture
 import re
 
 class ContactHelper():
@@ -7,6 +9,16 @@ class ContactHelper():
         self.app = app
 
     def create(self, contact):
+        wd = self.app.wd
+        # click add contact
+        wd.find_element_by_link_text("add new").click()
+        self.fill_form_contact(contact)
+        # save contact
+        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+        self.return_to_home_page()
+        self.contact_cache = None
+
+    def create_with_group(self, contact):
         wd = self.app.wd
         # click add contact
         wd.find_element_by_link_text("add new").click()
@@ -54,6 +66,12 @@ class ContactHelper():
         wd.find_element_by_name("phone2").send_keys(contact.phone2)
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
+        wd.find_element_by_name("new_group").click()
+        if contact.groupId is not None:
+            Select(wd.find_element_by_name("new_group")).select_by_value(contact.groupId)
+        else:
+            Select(wd.find_element_by_name("new_group")).select_by_visible_text(contact.groupName)
+
 
     def return_to_home_page(self):
         wd = self.app.wd
@@ -117,6 +135,7 @@ class ContactHelper():
         wd.find_elements_by_xpath("//tr/td/input")[index].click()
 
     def select_contact_by_id(self, id):
+        self.return_to_home_page()
         wd = self.app.wd
         wd.find_element_by_css_selector("input[value='%s']" % id).click()
 
@@ -149,21 +168,6 @@ class ContactHelper():
                                           all_emails_from_home_page=all_emails,
                                           address=address))
         return list(self.contact_cache)
-
-#<======
-    def get_contact_list_old(self):
-        if self.contact_cache is None:
-            wd = self.app.wd
-            self.return_to_home_page()
-            self.contact_cache = []
-            for element in wd.find_elements_by_name("entry"):
-                firstName = element.find_element_by_xpath(".//td[2]").text
-                lastName = element.find_element_by_xpath(".//td[3]").text
-                id = element.find_element_by_name("selected[]").get_attribute("id")
-                self.contact_cache.append(Contact(fName = firstName, lName = lastName, id = id))
-        return list(self.contact_cache)
-#=====>
-
 
     def open_contact_to_edit_by_index(self, index):
         wd = self.app.wd
@@ -208,3 +212,22 @@ class ContactHelper():
         secondaryphone = re.search("P: (.*)", text).group(1)
         return Contact(homephone=homephone, mobilephone=mobilephone,
                        workphone=workphone, secondaryphone=secondaryphone)
+
+    def set_listgroup_for_contacts(self, group):
+        wd = self.app.wd
+        self.return_to_home_page()
+        if group.id == '[all]':
+            self.return_to_home_page()
+        elif group.id == '[none]':
+            Select(wd.find_element_by_name("group")).select_by_value('[none]')
+        else:
+            Select(wd.find_element_by_name("group")).select_by_value(group.id)
+
+    def add_contact_to_selected_group(self, group):
+        wd = self.app.wd
+        Select(wd.find_element_by_name("to_group")).select_by_value(group.id)
+        wd.find_element_by_name("add").click()
+
+    def delete_contact_from_selected_group(self):
+        wd = self.app.wd
+        wd.find_element_by_name("remove").click()
