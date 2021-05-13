@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="05014f1c-83e1-4570-b421-41d99ff92b8e" name="Default Changelist" comment="Создан проект в PyCharm (и в догонку)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/check_db_connection.py" beforeDir="false" afterPath="$PROJECT_DIR$/check_db_connection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fixture/contact.py" beforeDir="false" afterPath="$PROJECT_DIR$/fixture/contact.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fixture/orm.py" beforeDir="false" afterPath="$PROJECT_DIR$/fixture/orm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/contact.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/contact.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test_del_contact.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_del_contact.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test_new_contact.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_new_contact.py" afterDir="false" />
     </list>
@@ -158,10 +153,10 @@
     <list>
       <item itemvalue="Python.check_db_connection" />
       <item itemvalue="Python tests.pytest in test_add_group.py" />
-      <item itemvalue="Python tests.pytest for test_phones.test_compare_info_all_contacts_on_main_page_and_info_from_db" />
+      <item itemvalue="Python tests.pytest for test_del_contact.test_delete_random_contact_from_group" />
       <item itemvalue="Python tests.pytest for test_new_contact.test_add_contact_with_group" />
       <item itemvalue="Python tests.pytest for test_new_contact.test_add_random_contact_to_random_group" />
-      <item itemvalue="Python tests.pytest for test_del_contact.test_delete_random_contact_from_group" />
+      <item itemvalue="Python tests.pytest for test_phones.test_compare_info_all_contacts_on_main_page_and_info_from_db" />
     </list>
     <recent_temporary>
       <list>

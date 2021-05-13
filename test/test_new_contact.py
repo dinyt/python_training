@@ -4,6 +4,7 @@ from operator import contains
 from model.contact import Contact
 import random
 from fixture.orm import ORMFixture
+from model.group import Group
 #import pytest
 
 #@pytest.mark.parametrize("contact", testdata, ids=[repr(x) for x in testdata])
@@ -42,3 +43,40 @@ def test_add_random_contact_to_random_group(app, orm):
     app.contact.select_contact_by_id(contact.id)
     app.contact.add_contact_to_selected_group(select_group_from_list)
     assert orm.contact_in_group(contact, select_group_from_list) == True
+
+
+def test_add_random_contact_to_random_group2(app, orm):
+    new_group = None
+    new_contact = None
+
+    groups = orm.get_group_list()
+    if len(groups) == 0:
+        suffix = str(random.randint(10000, 99999))
+        new_group = Group(name='New group #' + suffix,
+                          header='New header #' + suffix,
+                          footer='New footer #' + suffix)
+        app.group.create(new_group)
+
+    contacts = orm.get_contact_list()
+    if len(contacts) == 0:
+        suffix = str(random.randint(10000, 99999))
+        new_contact = Contact(fName='New fName ' + suffix,
+                              lName='New lName ' + suffix,
+                              mName= 'New mName ' + suffix)
+        app.contact.create(new_contact)
+
+    if new_group is None:
+        index = random.randint(0, len(groups) - 1)
+        new_group = groups[index]
+
+        if new_contact is None:
+            for new_group in groups:
+                contacts = orm.get_contacts_not_in_group(new_group)
+                if len(contacts) != 0:
+                    index = random.randint(0, len(contacts) - 1)
+                    new_contact = contacts[index]
+                    break
+
+    app.contact.select_contact_by_id(new_contact.id)
+    app.contact.add_contact_to_selected_group(new_group)
+    assert orm.contact_in_group(new_contact, new_group) == True
