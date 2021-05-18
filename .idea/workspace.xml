@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="05014f1c-83e1-4570-b421-41d99ff92b8e" name="Default Changelist" comment="Создан проект в PyCharm (и в догонку)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test_add_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_add_group.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_new_contact.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_new_contact.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,11 +151,11 @@
     </configuration>
     <list>
       <item itemvalue="Python.check_db_connection" />
-      <item itemvalue="Python tests.pytest in test_add_group.py" />
-      <item itemvalue="Python tests.pytest for test_del_contact.test_delete_random_contact_from_group" />
-      <item itemvalue="Python tests.pytest for test_add_group.test_add_group" />
-      <item itemvalue="Python tests.pytest for group_scenarios.test_add_new_group" />
       <item itemvalue="Python tests.pytest for bdd.group_scenarios.test_add_new_group" />
+      <item itemvalue="Python tests.pytest for group_scenarios.test_add_new_group" />
+      <item itemvalue="Python tests.pytest for test_add_group.test_add_group" />
+      <item itemvalue="Python tests.pytest for test_del_contact.test_delete_random_contact_from_group" />
+      <item itemvalue="Python tests.pytest in test_add_group.py" />
     </list>
     <recent_temporary>
       <list>
