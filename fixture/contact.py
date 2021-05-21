@@ -231,3 +231,17 @@ class ContactHelper():
     def delete_contact_from_selected_group(self):
         wd = self.app.wd
         wd.find_element_by_name("remove").click()
+
+    def add_contact_to_group(self, contact, group):
+        wd = self.app.wd
+        self.return_to_home_page()
+        self.select_contact_by_id(contact.id)
+        self.add_contact_to_selected_group(group)
+
+    def delete_contact_from_group(self, contact, group):
+        wd = self.app.wd
+        self.return_to_home_page()
+        self.set_listgroup_for_contacts(group)
+        self.select_contact_by_id(contact.id)
+        self.delete_contact_from_selected_group()
+        self.return_to_home_page()

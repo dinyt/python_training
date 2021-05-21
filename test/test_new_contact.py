@@ -3,6 +3,7 @@ from operator import contains
 
 from model.contact import Contact
 import random
+from random import randrange
 from fixture.orm import ORMFixture
 from model.group import Group
 #import pytest
@@ -46,66 +47,30 @@ def test_add_random_contact_to_random_group(app, orm):
 
 
 def test_add_random_contact_to_random_group2(app, orm):
-    new_group = None
-    new_contact = None
+    if app.contact.count() == 0:
+        suffix = str(random.randint(10000, 99999))
+        app.contact.create(Contact(fName='New fName ' + suffix,
+                                   lName='New lName ' + suffix,
+                                   mName='New mName ' + suffix))
 
+    if app.group.count() == 0:
+        suffix = str(random.randint(10000, 99999))
+        app.contact.create(Group(name='New group #' + suffix,
+                                 header='New header #' + suffix,
+                                 footer='New footer #' + suffix))
+
+    old_contacts = orm.get_contact_list()
     groups = orm.get_group_list()
-    if len(groups) == 0:
-        suffix = str(random.randint(10000, 99999))
-        new_group = Group(name='New group #' + suffix,
-                          header='New header #' + suffix,
-                          footer='New footer #' + suffix)
-        app.group.create(new_group)
+    index = randrange(len(old_contacts))
+    index_group = randrange(len(groups))
+    group = groups[index_group]
+    contact = old_contacts[index]
+    contacts_in_group = orm.get_contacts_in_group(group)
 
-    # функция будет проверять "свободный" контакт в очередной группе
-    # если такой есть, то возвращается случайный из найденной выборки
-    # иначе возвращаем ноль (признак отсутствия свободного контакта)
-    def get_free_contact(group):
-        temp_list_contacts = orm.get_contacts_not_in_group(group)
-        if len(temp_list_contacts) != 0:
-            index = random.randint(0, len(temp_list_contacts) - 1)
-            return temp_list_contacts[index]
-        else:
-            return 0
+    if contact in contacts_in_group:
+        app.contact.delete_contact_from_group(contact, group)
 
-    contacts = orm.get_contact_list()
-    if len(contacts) == 0:
-        suffix = str(random.randint(10000, 99999))
-        new_contact = Contact(fName='New fName ' + suffix,
-                              lName='New lName ' + suffix,
-                              mName= 'New mName ' + suffix)
-        app.contact.create(new_contact)
-    else:
-        # пробегаем по всем найденным группам
-        for group in groups:
-            # и проверяем наличие свободного контакта хоть в одной из групп
-            new_contact = get_free_contact(group)
-            # если такой контакт найден, то запоминаем его и выходим из цикла
-            if new_contact != 0:
-                break
-            else:
-                continue
-    # если ранее свободный от группы контакт так и не был найден
-    if new_contact == 0:
-        # то создаем его для дальнейшего использования
-        suffix = str(random.randint(10000, 99999))
-        new_contact = Contact(fName='New fName ' + suffix,
-                              lName='New lName ' + suffix,
-                              mName='New mName ' + suffix)
+    app.contact.add_contact_to_group(contact, group)
+    contacts_in_group = orm.get_count_contacts_in_group(group)
 
-
-    if new_group is None:
-        index = random.randint(0, len(groups) - 1)
-        new_group = groups[index]
-
-        if new_contact is None:
-            for new_group in groups:
-                contacts = orm.get_contacts_not_in_group(new_group)
-                if len(contacts) != 0:
-                    index = random.randint(0, len(contacts) - 1)
-                    new_contact = contacts[index]
-                    break
-
-    app.contact.select_contact_by_id(new_contact.id)
-    app.contact.add_contact_to_selected_group(new_group)
-    assert orm.contact_in_group(new_contact, new_group) == True
+    assert contact in contacts_in_group
