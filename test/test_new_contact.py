@@ -59,18 +59,58 @@ def test_add_random_contact_to_random_group2(app, orm):
                                  header='New header #' + suffix,
                                  footer='New footer #' + suffix))
 
-    old_contacts = orm.get_contact_list()
+    # old_contacts = orm.get_contact_list()
+    # groups = orm.get_group_list()
+    # index = randrange(len(old_contacts))
+    # index_group = randrange(len(groups))
+    # group = groups[index_group]
+    # contact = old_contacts[index]
+    # contacts_in_group = orm.get_contacts_in_group(group)
+    #
+    # if contact in contacts_in_group:
+    #     app.contact.delete_contact_from_group(contact, group)
+
+    # устанавливаем признак списка контактов, которые не содержатся в какой-нибудь группе
+    flag = False
+    # получаем список групп
     groups = orm.get_group_list()
-    index = randrange(len(old_contacts))
-    index_group = randrange(len(groups))
-    group = groups[index_group]
-    contact = old_contacts[index]
+    # проверяем среди всех групп
+    for group in groups:
+        # контакты, которые не содержатся в очередной группе
+        contact_list = orm.get_contacts_not_in_group(group)
+        # и если результирующий список контактов (для очередной группы) не пуст
+        if len(contact_list) != 0:
+            # тогда помечаем признак
+            flag = True
+            # запоминаем группу (чтобы потом в неё добавить контакт из списка)
+            gr = group
+            # и выходим из цикла
+            break
+
+    # если найден список контактов, которые не содержатся в какой-нибудь группе
+    if flag:
+        # берём случайный индекс
+        index = randrange(len(contact_list))
+        # и по этому индексу запоминаем контакт из списка
+        contact = contact_list[index]
+        # а также группу, в которую будем добавлять контакт
+        group = gr
+    # иначе, если такой список обнаружен не был
+    else:
+        # то создаём новый контакт
+        suffix = str(random.randint(10000, 99999))
+        contact = Contact(fName='New fName ' + suffix,
+                          lName='New lName ' + suffix,
+                          mName='New mName ' + suffix)
+        app.contact.create(contact)
+        # и выбираем случайную группу из списка групп по индексу
+        index_group = randrange(len(groups))
+        group = groups[index_group]
+
+    # добавляем в заранее определённую группу подготовленный контакт
+    app.contact.add_contact_to_group(contact, group)
+    # получаем список всех контактов в группе, в которую добавили контакт
     contacts_in_group = orm.get_contacts_in_group(group)
 
-    if contact in contacts_in_group:
-        app.contact.delete_contact_from_group(contact, group)
-
-    app.contact.add_contact_to_group(contact, group)
-    contacts_in_group = orm.get_count_contacts_in_group(group)
-
+    # проверяем вхождение подготовленного контакта в список контактов
     assert contact in contacts_in_group
