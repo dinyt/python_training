@@ -47,15 +47,38 @@ def test_add_random_contact_to_random_group(app, orm):
 
 
 def test_add_random_contact_to_random_group2(app, orm):
-    if app.contact.count() == 0:
+    def generate_contact():
         suffix = str(random.randint(10000, 99999))
-        app.contact.create(Contact(fName='New fName ' + suffix,
-                                   lName='New lName ' + suffix,
-                                   mName='New mName ' + suffix))
+        return Contact(fName='New fName ' + suffix,
+                       lName='New lName ' + suffix,
+                       mName='New mName ' + suffix,
+                       nick='Nick ' + suffix,
+                       title='Title ' + suffix,
+                       company='Company ' + suffix,
+                       address='Address ' + suffix,
+                       mobile='Mobile ' + suffix,
+                       home_phone='Home ' + suffix,
+                       work_phone='Work' + suffix,
+                       fax='Fax ' + suffix,
+                       email='Email@' + suffix,
+                       email2='Email2@' + suffix,
+                       email3='Email3@' + suffix,
+                       homePage='Home ' + suffix,
+                       phone2='Phone2 ' + suffix,
+                       notes='Notes: ' + suffix,
+                       address2='Address2 ' + suffix,
+                       homephone='Home ' + suffix,
+                       mobilephone='Mobile ' + suffix,
+                       workphone='Work ' + suffix,
+                       secondaryphone='Secondary ' + suffix)
+
+    if app.contact.count() == 0:
+        contact = generate_contact()
+        app.contact.create(contact)
 
     if app.group.count() == 0:
-        suffix = str(random.randint(10000, 99999))
-        app.contact.create(Group(name='New group #' + suffix,
+        suffix = str(random.randint(1000000, 9999999))
+        app.group.create(Group(name='New group #' + suffix,
                                  header='New header #' + suffix,
                                  footer='New footer #' + suffix))
 
@@ -98,10 +121,7 @@ def test_add_random_contact_to_random_group2(app, orm):
     # иначе, если такой список обнаружен не был
     else:
         # то создаём новый контакт
-        suffix = str(random.randint(10000, 99999))
-        contact = Contact(fName='New fName ' + suffix,
-                          lName='New lName ' + suffix,
-                          mName='New mName ' + suffix)
+        contact = generate_contact()
         app.contact.create(contact)
         # и выбираем случайную группу из списка групп по индексу
         index_group = randrange(len(groups))

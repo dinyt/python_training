@@ -14,7 +14,7 @@ class ContactHelper():
         wd.find_element_by_link_text("add new").click()
         self.fill_form_contact(contact)
         # save contact
-        wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+        wd.find_element_by_xpath("//input[@name='submit'][2]").click()
         self.return_to_home_page()
         self.contact_cache = None
 
@@ -67,10 +67,10 @@ class ContactHelper():
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(contact.notes)
         wd.find_element_by_name("new_group").click()
-        if contact.groupId is not None:
-            Select(wd.find_element_by_name("new_group")).select_by_value(contact.groupId)
-        else:
-            Select(wd.find_element_by_name("new_group")).select_by_visible_text(contact.groupName)
+        # if contact.groupId is not None:
+        #     Select(wd.find_element_by_name("new_group")).select_by_value(contact.groupId)
+        # else:
+        #     Select(wd.find_element_by_name("new_group")).select_by_visible_text(contact.groupName)
 
 
     def return_to_home_page(self):
@@ -137,7 +137,13 @@ class ContactHelper():
     def select_contact_by_id(self, id):
         self.return_to_home_page()
         wd = self.app.wd
-        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        #wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        wd.find_element_by_xpath("//input[@value='%s']" % id).click()
+
+    def select_contact_by_title(self, contact):
+        #self.return_to_home_page()
+        wd = self.app.wd
+        wd.find_element_by_xpath("//input[@title='Select (%s %s)']" % (contact.fName, contact.lName)).click()
 
     def click_delete_contact(self):
         wd = self.app.wd
@@ -235,13 +241,15 @@ class ContactHelper():
     def add_contact_to_group(self, contact, group):
         wd = self.app.wd
         self.return_to_home_page()
-        self.select_contact_by_id(contact.id)
+        #self.select_contact_by_id(contact.id)
+        self.select_contact_by_title(contact)
         self.add_contact_to_selected_group(group)
 
     def delete_contact_from_group(self, contact, group):
         wd = self.app.wd
         self.return_to_home_page()
         self.set_listgroup_for_contacts(group)
-        self.select_contact_by_id(contact.id)
+        #self.select_contact_by_id(contact.id)
+        self.select_contact_by_title(contact)
         self.delete_contact_from_selected_group()
         self.return_to_home_page()
